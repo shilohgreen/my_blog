@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Automated Market Makers</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="stylesheet" href="/style.css">
+<meta name="description" content="AMMs in cryptp.">
+</head>
+<body>
+<article>
+<h1>Automated Market Makers</h1>
+<p><time>2024-07-02</time></p>
+<p>With the sheer number of cryptocurrencies that exist (2.4 million listed tokens as of 2024), there has to be a way to convert value from one currency to the next. When the idea of changing one currency into another arises in our mind, we intuitively think of a money changer, a concept that is  familiar to fiat currency. </p>
+<p>However, many characteristics of a money changer, such as its centralized nature, are incongruent with DeFi. So how might we solve the problem of token swapping? </p>
+<p>DeFi came up with a solution in the form of <strong>Automated Market Makers</strong></p>
+<h2>What is an Automated Market Maker?</h2>
+<p>An <strong>Automated Market Maker</strong> (AMM) is a type of decentralized exchange that uses <strong>smart contracts</strong> and algorithms to facilitate trading of different cryptocurrencies (usually two; Bitcoin to Ethereum let&#39;s say) without the need for an intermediary. Think of this as a automated <strong>money changer</strong>, ran by code instead of people. </p>
+<p>Like its name suggests, each AMM can create markets for each token pair, which are called <strong>liquidity pools</strong>. It&#39;s important to note each liquidity pool holds its own stash of tokens, rather it than it being stored centrally in the AMM.</p>
+<p><img src="/amm/amm-lp-diagram.png" alt="Alt Text">
+<em>An AMM can create multiple liquidity pools to facilitate trading between different tokens</em></p>
+<p><img src="/amm/swap-example.jpg" alt="Alt Text">
+<em>A liquidity pool created by an Automated Market Maker, providing a token swap from Bitcoin and Ethereum</em></p>
+<p>Well, then where do the tokens come from? The smart contract can&#39;t give you Ethereum for your Bitcoin if it only have Bitcoin in it&#39;s pool of tokens. Any working exchange needs a sizable amount of both tokens to facilitate exchange. </p>
+<p>The tokens that are held by this contract is referred to as <strong>liquidity</strong>.</p>
+<p>The people who provide this liquidity to the pool, are referred to as <strong>liquidity providers</strong></p>
+<p>The people who use the tool to change tokens, we will refer to as <strong>traders</strong></p>
+<h2>1. Pricing</h2>
+<p>So, a quick recap, <strong>Automated Money Makers</strong> use smart contracts to create <strong>liquidity pools</strong>, which in turn hold <strong>liquidity</strong> (tokens) provided by <strong>Liquidity Providers</strong>. Traders who want to exchange token can then access the liquidity pool. But how do we establish the price (exchange rate) of the tokens? How do we know, for example, how much Bitcoin should the pool offer when a user wants to swap a sum of Ethereum into Bitcoin? </p>
+<h3>1.1 Price Setting</h3>
+<p>Where do we this price? The price is originally set by the liquidity providers who deposit tokens into the pool! </p>
+<p>When depositing tokens, liquidity providers deposit an <strong>equal value</strong> of each token in the pool (not to be confused with equal quantity). Let&#39;s say Bitcoin is 10 times the value of Ethereum, then liquidity providers will have to deposit in a ratio of 10 ETH to 1 BTC.</p>
+<h3>1.2 Price Curve (Constant Sum)</h3>
+<p>Now we that we know the price, we can model the state of the liquidity pool at any given time with the mathematical expression: </p>
+<p><img src="/amm/constant-market-maker-eqn.png" alt="Untitled">
+<em>Constant Sum Equation</em></p>
+<p>This is the most simplistic way a smart contract can model currency in a liquidity pool (we&#39;ll be covering more later one) where:</p>
+<ol>
+<li><strong>Gradient m</strong> represents the exchange rate (price of tokens in relation to one another)</li>
+<li><strong>Constant k</strong> represents the overall value of tokens in the pool</li>
+<li><strong>Coordinates X and Y</strong> represent the number of tokens in the pool at a point on the curve</li>
+</ol>
+<p>Let&#39;s look at it in graphical format here:</p>
+<p><img src="/amm/constant-graph.png" alt="Untitled">
+<em>Constant Sum Graph</em></p>
+<p>In this curve, the liquidity pool is represented with the equation y + 4m = 50, with the <strong>m</strong> gradient value of 4 and the <strong>k</strong> total token value of 50.</p>
+<p>In the above graph we have two coordinates (5,30 and 10,10) that represent different state of the pools, where user&#39;s interaction with the pool changes the coordinates <strong>along the line of the curve</strong>, changing the number of each token in the pool. </p>
+<p>Hence, movement from <strong>point A</strong> to <strong>point B</strong> on the curve represents the addition of 5 tokens of X and the removal of 20 tokens of Y, as 4 tokens of Y is equivalent to 1 token of X. </p>
+<h4>1.2.1 Issue with Constant Sum</h4>
+<p>Constant sum seems like an easy and straight forward way to liquidity in a liquidity pool, but it falls short in one key area: it cannot respond to <strong>changes in relative token value</strong>. </p>
+<p>What does this mean? Well in the above example we used the equation of <br/> y + 4x = 50, which means the <strong>constant m</strong> represents the token exchange rate between the two tokens (1 of X is worth 4 of Y).</p>
+<p>However, the price of crypto assets are never constant, in fact token prices are known to be very volatile. So how will a change in price relative price of the tokens affect the pool?</p>
+<p>Using the same equation of y + 4x = 50. Let&#39;s assume that price of X rises sharply in all crypto markets relative to Y, and it’s now worth 5 of Y. Since m is a constant in our pricing model (value of 4), the curve cannot change the exchange rate between token X and Y. This will lead to a sharp increase in the demand of X since it is underpriced in our liquidity pool. </p>
+<h4>1.2.2 Emptying of the pool</h4>
+<p><img src="/amm/constant-graph-drop.png" alt="Untitled">
+<em>Emptying of Token X from our liquidity pool</em></p>
+<p>This sharp increase in demand is represented by the change from point B to point C, as traders flock to take advantage of the price discrepancy of X relative to Y in our pool (1 X to 4 Y) versus the open market (1 X to 5 Y). By buying each X for 4Y, traders can now sell it on the open market for 5Y to garner a profit.</p>
+<p>Our liquidity pool is now rendered useless with a deviation of relative token price, which makes it a rather bad model for our liquidity pool. Can we find a model that can adapt to changing token prices?</p>
+<h3>1.3 Price Curve (Constant Product)</h3>
+<p>The constant product curve is an alternative to the constant sum curve in liquidity pools, and is represented with the mathematical expression where:</p>
+<ol>
+<li><strong>Coordinates X and Y</strong> represent the number of tokens in the pool at any point</li>
+<li><strong>Gradient Value</strong> at any point on the curve represents the exchange rate (at that particular point)</li>
+<li><strong>Constant K</strong> represents in total value in the pool</li>
+</ol>
+<p><img src="/amm/product-market-maker-eqn.png" alt="Untitled">
+<em>Constant Product Equation</em></p>
+<p>Again, let’s look at the equation as a graph:</p>
+<p><img src="/amm/product-graph.png" alt="Untitled">
+<em>Constant Product Graph</em></p>
+<p>In this curve, the liquidity pool is represented with the equation y * x = 100, with the <strong>k value</strong> of 100.</p>
+<p>In the above graph we have two coordinates A and B (5,20 and 15,6) that represent different state of the pools, where user&#39;s interaction with the pool changes the coordinates <strong>along the line of the curve</strong>, changing the number of each token in the pool. </p>
+<h4>1.3.1 Price Adaptation</h4>
+<p>Remember how the main issue with constant sum pools is the inability to <strong>adapt to price changes</strong> in the open market? And the gradient at a particular point represents the price (exchange rate) of each token? Let&#39;s look at how the product curve is able to adapt and change token prices as traders interact with the pool.</p>
+<p><img src="/amm/graph-compare.png" alt="Untitled">
+<em>Gradient/Exchange rate changes as token ratio changes</em></p>
+<p>Notice a movement from <strong>point A</strong> to <strong>point B</strong> on the product curve yields a different <strong>gradient</strong> (see tangent lines) and hence a new <strong>exchange rate</strong> at the new coordinates at B, unlike the sum curve (the gradient is always constant).</p>
+<p>As a user drains the pool of X, the price of X steadily becomes more expensive relative to Y. As traders exploit price differences between the liquidity pool and the exchange, the price of the tokens relative to each other adapts with each trade until the <strong>new price is reflective of the price of the tokens in the open market</strong>.</p>
+<h2>2. Slippage</h2>
+<p>Constant product are the most commonly used mechanism for liquidity pools, but it doesn&#39;t come without its issues. </p>
+<p>The price adaptation mechanism can still cause issues for the curve <strong>especially when liquidity</strong> is low. Without an adequate number of tokens in the pool, price fluctuations can be too extreme for traders to use the pool.</p>
+<p>Depending on the size of the trade relative to the pool, traders can experience a difference between the expected price of the trade versus the actual price of the trade is being executed. This difference is called <strong>slippage</strong></p>
+<p>It’s a tad unintuitive to grasp, so let’s delve deeper to see how this works.</p>
+<h3>2.1 Slippage mechanism</h3>
+<p>We&#39;ll be going back to the original product curve that we worked with earlier:</p>
+<p><img src="/amm/product-graph.png" alt="Untitled">
+<em>User trades the pool from Point B to Point A</em></p>
+<p>Before the trade, let&#39;s assume a pool state at coordinate B, with 10 of token Y and 10 of token X. By finding the gradient at that point, we realise that exchange rate between the tokens is 1:1. Let&#39;s say a user wants to buy 5 of token X, he would expect to pay 5 of token Y.</p>
+<p>However, this isn&#39;t the case. To satisfy the product formula of x*y, the user actually has to pay 10 Y instead, as the pool requires a total token Y quantity of 20 at point A. Hence the user has to pay 10Y tokens. This difference in expected price of 5Y tokens is what we deemed as <strong>slippage</strong></p>
+<h3>2.2 Lowering Slippage</h3>
+<p>Slippage is an inherent characteristic of trading with a product pool. But how do we reduce it? Well, you may have realised it, but the most important factor that determines the magnitude of slippage is <strong>the size of the trade relative to the size of the pool</strong>. </p>
+<p>Look at this graph with 100 tokens of Y and 100 tokens of X:</p>
+<p><img src="/amm/product-graph-high-liq.png" alt="Untitled">
+<em>Product Pool with much higher liquidity</em></p>
+<p>Notice how the gradient (hence price) difference between each point is much smaller? </p>
+<p>Now a user who wants to buy 5X, only must pay 5.3Y, as the pool needs a Y token quantity of 105.3 to satisfy the pool product of x*y=10000. The slippage of 0.3Y is much smaller compared to the slippage the previous pool.</p>
+<p>Hence, slippage can easily be mediated with a high amount liquidity in the pool!</p>
+<h2>3. More liquidity</h2>
+<p>Now we know how important liquidity is for price stability, there is a problem that remains: how do I attract enough liquidity for my pool to remain stable? There are two main ways the pool does this:</p>
+<ol>
+<li>Liquidity Incentives</li>
+<li>Transaction Fees</li>
+</ol>
+<p>But before we explore the solutions to this issue, we need to first understand the nature of the issue of <strong>attracting liquidity</strong></p>
+<h3>3.1 Cold Start Issue</h3>
+<p>When a liquidity pool is newly created, there is initially no liquidity in the pool, making it <strong>unattractive for traders</strong>. </p>
+<p>The cold start issue for liquidity providers and AMMs refers to the challenge of <strong>attracting initial liquidity when a new pool</strong>.</p>
+<p><img src="/amm/cyclical.png" alt="Cyclical nature of attracting liquidity">
+<em>Cyclical nature of attracting liquidity</em></p>
+<p>Potential liquidity providers may be hesitant to provide liquidity to a new pool as there is no guarantee that there will be sufficient trading volume to <strong>earn transaction fees</strong>. </p>
+<p>The pool needs high liquidity to be attract high trade volume, but it needs high trade volume to provide transaction fees to attract liquidity. </p>
+<h3>3.2 Liquidity Incentives</h3>
+<p>To overcome the cold start issue, AMMs and other DeFi protocols often use <strong>liquidity incentives</strong> to attract initial liquidity providers. </p>
+<p><img src="/amm/zilswap-lp.jpg" alt="Liquidity incentives on ZilSwap">
+<em>Liquidity incentives on ZilSwap</em></p>
+<p>These incentives can take the form of <strong>additional rewards in tokens</strong> locked in the pool, which can be earned by the liquidity providers <strong>in addition to the regular transaction fees</strong>.</p>
+<h5>Governance tokens</h5>
+<p>Additionally, a new pool might offer a <strong>reward in its own governance token</strong> to traders who provide liquidity to a specific pool. These tokens give liquidity providers voting on proposals that influence pool protocols like adjusting of transaction fees and implementing new features</p>
+<p>These rewards can make it more attractive for traders to provide liquidity, helping to overcome the cold start issue and <strong>kickstart trading activity</strong> in the AMM. </p>
+<h3>3.3 Transaction fees</h3>
+<p>Once the pool has enough liquidity to start attracting traders, the pool will charge smal transaction fees for traders (on top of the exchange rate), which will then distributed to liquidity providers. </p>
+<p><img src="/amm/zilswap-apr.png" alt="Liquidity incentives on ZilSwap">
+<em>Zilswap APR</em></p>
+<p>Before providing liquidity for a pool, you can see how much you can earn by locking your tokens in pool, usually displayed as an annual percentage return (APR). </p>
+<p>Note that an APR of 36% for example does not mean that the pool is charging 36% transaction fee for traders, usually new pools like you see from the above example have high liquidity incentives to attractive initial liquidity, which will be calculated into the APR.</p>
+<p>Additionally, the APR of 36% calculated is not fixed, as APR is calculated based of transaction volume, which may or may not be stable. The net returns displayed is often a projection of how much volume the pool will have based off past trading volume. </p>
+<h2>4. Conclusion</h2>
+<p>The crux of decentralized finance, is its ability to replace traditional financial intermediaries (e.g., banks, brokers) with decentralized protocols to reduce costs and increase efficiency. </p>
+<p>But the replacement of traditional financial services like money exchange, with its decentralized counterparts (automated market makers in this case), requires creativity and ingenuity in protocol design to be able to fulfill the same utility that it&#39;s traditional equivalent.</p>
+<p>In my view, I think liquidity pools and AMMs are a neat piece of engineering that leverages on incentives to create value for both traders and liquidity providers alike. </p>
+
+</article>
+<hr>
+</body>
+</html>

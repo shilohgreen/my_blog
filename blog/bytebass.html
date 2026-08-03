@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>ByteBass: Audio Engineering, C Programming</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="stylesheet" href="/style.css">
+<meta name="description" content="ByteBass is a piece of sofware that allows bass players to identify what notes they played.">
+</head>
+<body>
+<article>
+<h1>ByteBass: Audio Engineering, C Programming</h1>
+<p><time>June 14 2024</time></p>
+<p>This article will walk through how I wrote a piece of software called ByteBass. I had the great fortune of being able to work with two of my closest friends (Neville and Sanat) and I had alot of fun working on it with them. This project was challenging and also required extensive knowledge outside of our curriculum to execute, but it&#39;s probably my favourite school project to date.</p>
+<p>I will try my best abstract away or at least simplify complex concepts we had to deal such as fast fourier transforms, finite state machines, fundemental frequencies, audio compression and much more. I aim to give a high level overview of the project as a whole, so I wont delve into the code much, but if you are interested in full technical specifics, you can take a look at our <a href="https://docs.google.com/document/d/1N4-DrwY0xTrI2OTaXuH5IsKK-DXxJHqcANJLYn_ql-0/edit?usp=sharing" target="_blank">full project report</a> and <a href="https://github.com/shilohgreen/bytebass" target="_blank">our project repo</a>!</p>
+<p>Oh also it&#39;s also written entirely in C. Which I think is kinda cool.</p>
+<h2>What does ByteBass do?</h2>
+<blockquote>
+<p>ByteBass is a piece of software that allows bass players to identify what notes they played.</p>
+</blockquote>
+<p>Its actually more than that, it takes a WAV file and a CLI input of what scale you played, and then it identifies what notes you played wrongly, but let&#39;s stick with this definition for simplicity’s sake.</p>
+<h2>Plan of Attack</h2>
+<p>This project is pretty complicated, so I&#39;ll simplify it into 3 distinct parts:</p>
+<p><img src="/bytebass/data-flowchart.jpg" alt="Alt Text"></p>
+<p>We are essentially looking at the binary contents of an audio file (literally the 1s and 0s) and trying extra geometric data.</p>
+<p>Then from the geometric data, we can then infer what note is being played.</p>
+<p>I promise you it&#39;ll make more sense as we go along so hang in there.</p>
+<h2>1. Sound and its Properties</h2>
+<p>The following chapter is going to be a quick introduction to some of the physics of sound waves and how they relate to our project, so bear with me here.
+Its gonna focus on the second half the above flowchart, inferring what note has been played from the geometric graph.</p>
+<p><img src="/bytebass/geo-to-human.jpg" alt="Alt Text"></p>
+<p>We did some (really extensive) digging and research, and I&#39;m going to try and distil it down to the ones most relevant to this project:</p>
+<h4>1.1 Modelling sound as a geometric wave</h4>
+<p>What is sound? It&#39;s nothing more than vibrating air. Your mom shouting, a cricket chirping, your favourite Taylor Swift song, its all just different variations of vibrating particles. Here&#39;s a gif to explain:</p>
+<p><img src="/bytebass/SoundWave.gif" alt="Alt Text"></p>
+<p>Understanding this visualisation is key! Notice how we can model the lateral, back and forth movement of the sound particle using a graph, specifically a geometric wave function. </p>
+<h4>1.2 Inferring a note from a geometric wave</h4>
+<p>But what makes a C note, a C note? A sound wave has many different characteristics, but the key property that determines how does a note sound is the <strong>frequency</strong> of the wave itself, so lets just focus on that.</p>
+<p>Heres an audio snippet of a C note I generated using code:</p>
+<p><audio controls src="/bytebass/middle-c.mp3"></audio></p>
+<p>It sounds pretty bland doesnt it. </p>
+<p>It&#39;s graphical representation is also very simple, it&#39;s characterised by a simple sine wave of frequency around 262 Hz (the particles vibrate at a frequency of 262 times a second). Look at how nicely shaped it is. </p>
+<p><img src="/bytebass/middle-c.jpg" alt="Alt Text"></p>
+<p>Each note in music theory has a specific frequency associated with it, since the soundwave is pretty simple, we can quickly calculate the frequency. We can then cross-reference the frequency to a chart such as the one below to find out the note being played. </p>
+<p><img src="/bytebass/note-chart.png" alt="Alt Text"></p>
+<h4>1.3 Imperfections of soundwaves</h4>
+<p>Let’s take a look at that piece of audio and its corresponding graph again.</p>
+<p><audio controls src="/bytebass/middle-c.mp3"></audio></p>
+<p><img src="/bytebass/middle-c.jpg" alt="Alt Text"></p>
+<p>It looks really perfect and clean right?</p>
+<p>In reality, sound waves are rarely flawless, their graphical representations are often messy and imperfect. Here&#39;s an audio snippet of another note, but played on a saxophone:</p>
+<p><audio controls src="/bytebass/sax-note.wav"></audio></p>
+<p>How does that sound compare to the earlier snippet? Warmer? More human maybe? Here&#39;s its graphical representation:</p>
+<p><img src="/bytebass/sax-wav.jpg" alt="Alt Text"></p>
+<p>Damn this does not look as clean as the previous graph. In reality, particles rarely follow a fixed frequency, and often move in an irregular manner. </p>
+<h4>1.4 Fundemental Frequency using Fourier Transform</h4>
+<p>So does the waveform above still have a frequency? </p>
+<p>The answer is yes, no matter the wave form, we can still extract a fundemental (or a number of fundemental frequencies)</p>
+<p>The messy wave form above is actually a combination of many frequencies, but it still has a <strong>fundemental</strong> frequency of 1040Hz (C6).</p>
+<p>Okay so we know now, even with messed up waveforms, we still can extract the fundemental frequency to determine what it sounds like.</p>
+<p>But how do perform this extraction? We were pointed towards a mathematical transformation called the <strong>Fourier Transform</strong>. It&#39;s not exactly the simplest concept to understand, so I&#39;m outsourcing the explaination to this youtube video:</p>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/spUNpyF58BY" frameborder="0" allowfullscreen></iframe><p>If you dont have the patience for this, THATS FINE. I get it. We all use Tiktok, we can&#39;t do 20 minute videos anymore. We can black box this entire concept and move on. </p>
+<p><strong>Just remember the tldr</strong>: We can extract the fundamental frequency of <strong>any</strong> soundwave using Fourier transformations, and we can infer the perceived note from that fundamental frequency.</p>
+<h4>1.5 Summary</h4>
+<p>We&#39;ve come to end of this section, if you&#39;ve been only skimming, here’s a quick summary of what we&#39;ve covered this chapter</p>
+<p>Given the geometric data of a soundwave (sinusoidal wave), we can infer the note that’s being played by calculating the frequency of that wave, and then cross referring that to a frequency chart to find out the corresponding note.</p>
+<h2>2. Audio Data: WAV files</h2>
+<p>Okay now we know how to obtain information if we are given sound data in the geometric wave form. We should be able to extract the note that’s being played given this geometric data. Hence, we will be focusing on the first half of the flowchart for this section:</p>
+<p><img src="/bytebass/binary-to-geo.jpg" alt="Alt Text"></p>
+<p>The question is now how can we extract this geometric data from the binary data within the an audio file (specifically, a <a href="https://en.wikipedia.org/wiki/WAV" target="_blank">WAV file</a>) ?</p>
+<p>Let&#39;s take a deep dive into an audio file (WAV file) and what it contains. This is what it looks like at its lowest level.</p>
+<p>1010101101011001110010110111010100100101111001010111001010101110111001010101010011010101100111001100101110111011010101010010101101011001110010110111010100100101111001010111001010101110101010110101100111001011011101010010010111100101011100101010111011100101010101001101010110011100110010111011101101010101001010110101100111001011011101010010010111100101011100101010111010101011010110011100101101110101001001011110010101110010101011101110010101010100110101011001110011001011101110110101010100101011010110011100101101110101001001011110010101110010101011101010101101011001110010110111010100100101111001010111001010101110111001010101010011010101100111001100101110111011010101010010101101011001110010110111</p>
+<p>What the hell are we looking at? Looks absolutely meaningless doesnt it? But there is a method to the madness. Hidden in this binary is actually all the information we need to construct the geometric wave form that represents sound. </p>
+<p>If you are not familiar with binary (and its ability to represent information like numbers, letters and symbols), it might be helpful looking at this video:</p>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/zDNaUi2cjv4" frameborder="0" allowfullscreen></iframe><p>We&#39;ll be splitting this massive chunk of binary into two parts: Headers and Audio Data</p>
+<h4>2.1 Header and Metadata</h4>
+<p>The first section of an uncompressed WAV file is pretty standard, it&#39;s going to be exactly 44 bytes long, and it contains use essential data such as bit rate, sample rate and the size of the file. </p>
+<p>Here&#39;s a sneak preview of sample struct of the header in C:</p>
+<pre><code class="language-html">struct wav_header
+{
+  char riff[4];           /* &quot;RIFF&quot;                                  */
+  int32_t flength;        /* file length in bytes                    */
+  char wave[4];           /* &quot;WAVE&quot;                                  */
+  char fmt[4];            /* &quot;fmt &quot;                                  */
+  int32_t chunk_size;     /* size of FMT chunk in bytes (usually 16) */
+  int16_t format_tag;     /* 1=PCM, 257=Mu-Law, 258=A-Law, 259=ADPCM */
+  int16_t num_chans;      /* 1=mono, 2=stereo                        */
+  int32_t srate;          /* Sampling rate in samples per second     */
+  int32_t bytes_per_sec;  /* bytes per second = srate*bytes_per_samp */
+  int16_t bytes_per_samp; /* 2=16-bit mono, 4=16-bit stereo          */
+  int16_t bits_per_samp;  /* Number of bits per sample               */
+  char data[4];           /* &quot;data&quot;                                  */
+  int32_t dlength;        /* data length in bytes (filelength - 44)  */
+};
+</code></pre>
+<p>Dont worry if it all seems like gibberish, most of it isn’t really relevant to understanding our project. Just know that a good chunk of binary at the start this file is reserved for this data.</p>
+<h4>2.2 Audio Data</h4>
+<p>This is the bulk of the WAV file, where we can find the audio data itself. </p>
+<p>Unfortunately, it&#39;s still a massive mess of 1s and 0s, but embedded in it is actually the data we need to construct a geometric wave. </p>
+<p>We read the binary in sets of 8 bytes (64 bits), with each set of 8 bytes representing a float (a decimal number). </p>
+<p><img src="/bytebass/binary-breakdown.jpg" alt="Alt Text"></p>
+<p>What does this decimal represent? It actually represents the <strong>distance</strong> between a discrete point on the curve to the X-axis itself on the geometric wave! Here’s a photo for visualisation:</p>
+<p><img src="/bytebass/binary-sine.jpg" alt="Alt Text"></p>
+<p>I hope this is beginning to make sense, as you can see we can read each float and construct a geometric function consisting of individual discrete points.</p>
+<p>The smaller the gap between the floats (the greater the number of floats per unit time), the greater the fidelity of the geometric wave. </p>
+<p>So this is how we construct the geometric wave from binary data!</p>
+<h2>3. Data slicing</h2>
+<p><img src="/bytebass/data-flowchart.jpg" alt="Alt Text"></p>
+<p>We are almost there! We now know how to extract a geometric representation of a sound wave from the binary data of an audio file, and then infer the note from the sound wave itself.</p>
+<p>We still have a problem though. The previous examples all assumes that the audio file only contains a singular note, what if multiple notes are played within the file itself?</p>
+<p><img src="/bytebass/bass-wav.jpg" alt="blog placeholder"></p>
+<p>We clearly need to slice this data up for processing, but how do we do this programmatically? It seems straight forward, intuitively we can just set a hard limit on the amplitude right? If the soundwave goes past a set amplitude, we&#39;ll just mark it as the beginning of a new note, and if it drops below it, then the note has stopped playing. </p>
+<p>Unfortunately, we can&#39;t do that. Different audio files have different properties that would interfere with this method. An audio file where you play the bass softly would not trigger the detection, or a bass file with high background noise would trigger the threshold but not deactivate it.</p>
+<p>We found an elegant solution in the form of a moving average detection algorithm.</p>
+<p><img src="/bytebass/moving-average.jpg" alt="Alt Text"></p>
+<p>A moving average is a statistical technique used to analyse data by calculating averages of different subsets of the complete dataset, so if the moving average goes above a certain (normalized) threshold, we count it as a note, and when it falls back down, we deem that note as finished.</p>
+<h2>4. Putting it all together</h2>
+<p>We finally have all the tools to put everything together! Let&#39;s use an example and go step by step, using the chart as a reference.</p>
+<p><img src="/bytebass/data-flowchart.jpg" alt="Alt Text"></p>
+<p>Here&#39;s the bass file audio file we are going to use, it&#39;s basically my friend playing a C Major scale, lets listen:</p>
+<p><audio controls src="/bytebass/C_major.wav"></audio></p>
+<p>As we have mentioned in one of the previous chapters, we can dissect the <strong>binary data</strong> of the audio file to generate the <strong>geometric data</strong> as a sinusoidal wave below:</p>
+<p><img src="/bytebass/bass-wav.jpg" alt="blog placeholder"></p>
+<p>We then slice this bass file up using our moving averages algorithm, creating segments like the graph below:</p>
+<p><img src="/bytebass/bass-wav-segment.jpg" alt="blog placeholder"></p>
+<p>We then perform a <strong>Fourier transform</strong> to derive a fundamental frequency (<strong>human readable data</strong>), then cross reference the fundamental frequency to the note chart to find the final note!</p>
+<p>The segment above derives us a <strong>C note</strong>, processing all the segments gives us this:</p>
+<p><img src="/bytebass/final-notes.jpg" alt="blog placeholder"></p>
+<h2>5. Summary</h2>
+<p>At its core, this project was about using C to read and interpret data in a meaningful way. However, what we learnt from this project goes beyond just learning a new language, it was really about pushing ourselves, delving out of the curriculum to learn more about a complex subject.</p>
+<p>This was also an exercise in being comfortable with abstracting away certain concepts, as we couldn’t possibly learn everything there was to learn about audio and sound engineering, so we really had to be careful with which concepts we needed to understand fully (Fast Fourier Transforms etc) and what concepts we could just skim through.</p>
+<p>This project also came with its fair share of obstacles, some of which were quite stressful to navigate given the timeline of this project during the school term. You can read about the full details of our technical challenges in our <a href="https://docs.google.com/document/d/1N4-DrwY0xTrI2OTaXuH5IsKK-DXxJHqcANJLYn_ql-0/edit?usp=sharing" target="_blank">project report</a>.</p>
+<p>But looking back, it was fun embarking on this project, and it was definitely one of the more fulfilling ones in SUTD</p>
+
+</article>
+<hr>
+</body>
+</html>

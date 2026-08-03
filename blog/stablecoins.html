@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Stablecoins 101</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="stylesheet" href="/style.css">
+<meta name="description" content="How do stablecoins work?">
+</head>
+<body>
+<article>
+<h1>Stablecoins 101</h1>
+<p><time>Sept 24 2024</time></p>
+<p>In 2023, I had the good fortune of working for a crypto company called Switcheo, where I worked on an options exchange for cryptocurrencies called <a href="https://app.dem.exchange">Demex</a>. While working on it, I inevitibly had to learn about stablecoins, which are a fundamental component of the DeFi ecosystem. Here&#39;s a rundown of what I learnt:</p>
+<h2>1. What is a stablecoin?</h2>
+<blockquote>
+<p>Stablecoins are <a href="https://www.investopedia.com/terms/c/cryptocurrency.asp">cryptocurrencies</a> whose value is pegged, or tied, to that of fiat currency (like USD). </p>
+</blockquote>
+<p>Technically, you can peg a stablecoin to anything (gold, carrots, socks), but fiat currency is the most common. The idea is that 1 stablecoin is always worth 1 USD, so if you have 1000 stablecoins, you should be able to exchange them for 1000 USD. </p>
+<h5>Why not just use fiat?</h5>
+<p>Well most crypto platforms dont accept fiat currency (for fees, collateral etc), owing to the fact that they are decentralized and hence do not have access to traditional banking services.</p>
+<h5>Why not use other cryptocurrencies like Bitcoin or Ethereum?</h5>
+<p>One of the main criticisms of traditional cryptocurrencies is their volatility, which makes them less than ideal as a medium of exchange or store of value. It&#39;s hard to price an asset with a currency that fluctuates in value so frequently. Here&#39;s a chart depicting the Bitcoin prices over the last decade or so:</p>
+<p><img src="/stablecoin/bitcoin-price-chart.png" alt="Alt Text"></p>
+<p>Stablecoins aim to be a bridge between the traditional financial world and the crypto world, by providing the benefits of cryptocurrencies (fast, cheap, borderless transactions) without the volatility. As such, they have become an incredibly popular tool for the purchase of goods and services across decentralized platforms.</p>
+<blockquote>
+<p>As of late July 2023, the stablecoin Tether (<a href="https://www.investopedia.com/markets/quote?tvwidgetsymbol=usdtusd">USDT</a>), was the third-largest cryptocurrency (behind ETH and BTC) by market capitalization, worth more than $83 billion</p>
+</blockquote>
+<h2>2. Types of stablecoins</h2>
+<p>The fundamental characteristic of a stablecoin is that it is pegged to a fiat currency, but how is this peg actually maintained? There are there main types of stablecoins and they achieve this peg in different ways: </p>
+<h5>2.1 Fiat Collateralized</h5>
+<p>The value of these stablecoins is backed by a reserve of traditional fiat currencies, such as the US dollar or the euro, held in a bank account.</p>
+<h5>2.2 Token Collateralized</h5>
+<p>The value of these stablecoins is backed by a reserve of other cryptocurrencies, frequently with smart contracts and algorithms to maintain the stablecoin&#39;s value.</p>
+<h5>2.3 Algorithm-backed</h5>
+<p>The value of these stablecoins do not rely on physical or digital assets as collateral but instead use only algorithms and smart contracts to control supply and demand, keeping the coin&#39;s value stable</p>
+<h2>3. Fiat Collateralized Stablecoins</h2>
+<p>Fiat stablecoins use the concept of collateralization to peg its value to a fiat currency. This means that for every stablecoin in circulation, there is an equivalent amount of fiat currency held in reserve.</p>
+<p>A fiat-backed cryptocurrency ensures you can exchange 1 token for 1 USD at all times. This is usually done with a reserve of USD in a bank account, owned by a third party.</p>
+<p><img src="/stablecoin/fiat-backed.png" alt="Alt Text"></p>
+<p>Such reserves are maintained by independent custodians and are regularly audited. <a href="https://www.investopedia.com/terms/t/tether-usdt.asp">Tether</a> (<a href="https://www.investopedia.com/markets/quote?tvwidgetsymbol=usdtusd">USDT</a>) and TrueUSD (<a href="https://www.investopedia.com/markets/quote?tvwidgetsymbol=tusdusd">TUSD</a>) are popular stablecoins backed by U.S. dollar reserves.</p>
+<h3>3.1 Pricing mechanism</h3>
+<aside>
+🐴 Users can always exchange 1 USDT for 1 USD (and vice versa)
+</aside><p>It seems pretty intuitive at first how a 1 to 1 that’s always available can maintain the peg, but how does it actually work? Let&#39;s quickly run through the mechanics of how a fiat-backed stablecoin maintains its peg. </p>
+<p>We&#39;ll run through the concept using two scenarios, one with an underpeg (the price of a token falls below 1 USD) and an overpeg (the price of token rises above 1 USD). </p>
+<p>Arbitrage is an important concept in understanding these mechanisms; it might be worth learning about it <a href="https://www.youtube.com/watch?v=s7QfCsGqeuw&ab_channel=HBSOnline">here</a> if you&#39;re not familiar with it.</p>
+<h4>3.1.1 Underpeg</h4>
+<p>If the token is now worth 0.95 cents, arbitrage can happen → I buy USDT from you and exchange USDT for 1 USD at Tether Exchange (Profit of 0.05 USD and <strong>lowering the overall supply</strong>)</p>
+<p>This lowering of supply creates a scarcity of the token, driving the price up back up. This happens till the token reaches a price of 1 USD.</p>
+<h4>3.1.2 Overpeg</h4>
+<p>If the token is now worth 1.05, arbitrage can happen → I go to Tether Exchange and buy 1 USDT for 1 USD, then I sell (<strong>Profit of 0.05 USD and increasing overall supply</strong>)</p>
+<p>This increasing of supply creates an abundance of the token, driving the price down. This happens till the token reaches a price of 1 USD.</p>
+<h2>3.2 Risks</h2>
+<p>The entire premise of a fiat-backed stablecoin is reliant on the fact that it has enough reserves to back the tokens in circulation. </p>
+<p>From the earlier underpeg/overpeg scenarios, notice how the pricing mechanism is entirely predicated by the fact that I can exchange 1 USDT for 1 USD. If I can&#39;t do that, the entire system falls apart.</p>
+<blockquote>
+<p>A 1:1 backing ratio ensures that users can redeem the stablecoin for an equivalent amount of fiat currency at any time. This guarantees liquidity, as users have confidence that they can convert their stablecoins back to fiat without loss of value.</p>
+</blockquote>
+<h4>Drama?</h4>
+<p>Tether (USDT) is, behind Bitcoin and Ethereum, the third most used cryptocurrency in the world. Each Tether token is intended to be backed by one USD held in reserve by the issuing company, Tether Limited. Currently, there is 120 billion Tether in circulation, with presumably 120 billion USD in reserve. </p>
+<p>However, Tether has been the subject of controversy and legal issues, with critics questioning whether the company has the reserves to back the tokens in circulation. </p>
+<p>Tether holds an enormous amount of capital in its reserves and (in theory) should hold most of this in cash or liquid assets to ensure that users can always redeem USDT for USD. However, the incentive to cheat is strong. If Tether parks this money in higher yielding but less liquid assets, they can make a lot of money. </p>
+<p><img src="/stablecoin/cheat.png" alt="Alt Text"></p>
+<p>Checkout these articles for more information on the Tether drama:</p>
+<blockquote>
+<p><a href="https://www.bloomberg.com/news/features/2021-10-07/crypto-mystery-where-s-the-69-billion-backing-the-stablecoin-tether">Where’s the 83 billion dollars?</a></p>
+</blockquote>
+<blockquote>
+<p><a href="https://www.coindesk.com/policy/2022/09/26/tethers-former-auditor-fined-1m-by-sec-for-sloppy-accounting/">Auditing Malpractice by Tether</a></p>
+</blockquote>
+<h2>4. Token Collateralized Stablecoins</h2>
+<p>Similar to fiat-backed stablecoins, token-backed stablecoins are backed by a reserve of <strong>other cryptocurrencies</strong> (tokens) rather than <strong>traditional fiat currencies</strong>. So instead putting up USD, I put up another token like BTC for collateralisation instead. This design allows the stablecoin to leverage the transparency and efficiency of blockchain technology while striving to maintain a stable value. </p>
+<h3>Using tokens instead of fiat currency as collateral</h3>
+<p>The use of tokens as collateral over fiat gives rise to a few extra rules:</p>
+<ol>
+<li><p>The value of the token minted will <strong>always</strong> be lower than the value of the tokens used as collateral due to the volatility of token prices</p>
+</li>
+<li><p>Some token-backed coins employ <strong>dynamic interest rates</strong> to keep the peg at 1 USD, this dynamic interest rate is determined by the protocol or centralized authority, manipulating the supply to maintain price stability</p>
+</li>
+</ol>
+<p>Here&#39;s where things might get a tad complicated, so let’s use an example to illustrate how this works. </p>
+<p>Let&#39;s take a look at the <a href="https://docs.carbon.network/carbon-tokens/carbon-usd-usc-stablecoin">Carbon USD stablecoin</a> (USC) as an example, a stablecoin minted by the Carbon Protocol.</p>
+<h3>Carbon Token (USC)</h3>
+<blockquote>
+<p>Carbon USD, USC, is Carbon&#39;s native stablecoin that follows the MakerDAO&#39;s Collateral Debt Position (CDP) model that mints the popular DAI stablecoin. This over-collateralization mechanism ensures that each USC is always backed by more than $1 worth of collateral.</p>
+<p>USC is available for minting via its native <a href="https://app.dem.exchange/nitron">Nitron</a> money market platform</p>
+</blockquote>
+<h3>4.1 Pricing Mechanism</h3>
+<p>The pricing mechanism of USC is mainly controlled with the <strong>Dynamic Interest Rate Model</strong>. The interest rate of USC will be automatically adjusted upwards or downwards <strong>every 6 hours</strong>. The following section will be an explanation of how this dynamic interest rate interacts with the price of USC to maintain the peg.</p>
+<h4>4.1.1 Interest Rate vs Price</h4>
+<p>We know that the protocol uses <strong>interest rate</strong> to control the <strong>price</strong>, but what exactly is the mechanism in the relationship between price and interest rate?</p>
+<p>The way interest rate controls the price, is through the <strong>exertion of buying pressure in the free market</strong>. We&#39;ll explore this in the following underpeg and overpeg examples:</p>
+<h5>How is interest accrued?</h5>
+<p>Interest is accrued in every 6 hour time block.</p>
+<p>Let&#39;s say I mint 1000 USC, I now have a base debt of 1000 USC. Assuming a interest rate of 1% (per annum), then after 6 hours, I will accrue an interest of 1.1416 x 10<sup>-6</sup> USC (1 percent divided by 365 days, divided by 24 hours, times 6 hours).</p>
+<p>Since this interest rate (possibly) changes every 6 hours, the interest accrued on your minted USC will also be calculated every 6 hours.</p>
+<h4>4.1.2 Dynamic Interest Rate Model</h4>
+<p>How does the protocol decide how much interest rate to charge?</p>
+<p>The adjustment will be based on the <strong>Time-Weighted Average Price</strong> (basically an average of the price of the token over the last couple hours) of USC. </p>
+<p>The formula used is shown below:</p>
+<p><img src="/stablecoin/dynamic-interest-rate.jpg" alt="Alt Text"></p>
+<p>r<sub>t</sub> represents the interest rate at any given 6 hour block. As you can see, the interest rate at any given time is dependent on two factors (omitting the adjustor coefficient which is a constant): the current price of USC and the interest rate of the token from the previous 6 hour time block, r<sub>t - 1</sub>.</p>
+<p>Try to sub in your own values and you&#39;ll find that <strong>interest rates are positive for underpegs</strong> (price of USC &lt; 1 USD) and <strong>0 for overpegs</strong> (price of USC &gt; 1 USD).</p>
+<p>All this is probably a tad confusing, so let&#39;s take a look at some scenarios, and see how the peg is maintained from a token holders’ perspective.</p>
+<h4>4.1.3 Underpeg</h4>
+<p>Let&#39;s assume that the current interest rate of USC = 1.5% and AdjustorCoefficient of 1.</p>
+<p>If the price of USC falls below the peg to an average of $0.95 over a 6-hour time block, the interest rate will be gradually increased to promote the purchase of USC, which will raise the price of USC back up to the peg.</p>
+<p>Let&#39;s look at the formula again:</p>
+<p><img src="/stablecoin/dynamic-interest-rate.jpg" alt="Alt Text"></p>
+<p>In this scenario, we have a r<sub>t - 1</sub> of 1.5% and a price of 0.95 USD. Subbing in the values, we get a new interest rate of 1.55%. </p>
+<p><strong>Why would the price go up?</strong> → With the higher interest rate, minters are now incentivized to not only <strong>mint less USC</strong>, but also <strong>exert buying pressure</strong> in the free market, <strong>driving up demand</strong> and hence increasing the price of USC. </p>
+<h4>4.1.4 Overpeg</h4>
+<p>Let&#39;s assume that the current interest rate of USC = 1.5%.</p>
+<p>If the price of USC rises above the peg to an average of $1.005 over a 6-hour epoch, the interest rate will be gradually decreased to promote the purchase of USC, which will raise the price of USC back up to the peg.</p>
+<p>Let&#39;s look at the formula again:</p>
+<p><img src="/stablecoin/dynamic-interest-rate.jpg" alt="Alt Text"></p>
+<p>In this scenario, we have a r<sub>t - 1</sub> of 1.5% and a price of 1.005 USD. Subbing in the values, we get a new interest rate of 0.5%.</p>
+<p><strong>Why would the price go down?</strong> → With the lower interest rate, minters are now incentivized to incentivized <strong>mint more USC</strong>, and buying pressure is lowered in the free market as individuals are less pressured to pay back the interest, <strong>lowering demand</strong> and hence dropping the price of USC. </p>
+<h2>5. Algorithm-based Stablecoins</h2>
+<p>So we&#39;ve explored two types of stablecoins, fiat and token collateralised, which involves holding actual assets in hand to maintain the peg. </p>
+<p>However, this third kind of stablecoin does not rely on physical or digital assets as collateral but instead uses only <strong>algorithms and smart contracts</strong> to control supply and demand, keeping the coin&#39;s value stable.</p>
+<blockquote>
+<p>Non-collateralized stablecoins use <strong>algorithms</strong> to control the <strong>expansion and contraction of supply</strong>, hence controlling price. This is done through the <strong>minting and burning</strong> dynamic of two tokens (we&#39;ll cover more of this below).</p>
+</blockquote>
+<blockquote>
+<p>This means that they <em>approximate</em> the value of the US dollar, but <strong>don’t <em>hold</em> US dollars</strong>.</p>
+</blockquote>
+<h4>5.1 Mint-Burn dynamic</h4>
+<p>The core of algorithmic stablecoin is the mint-burn dynamic between two tokens. The first token is the <strong>stablecoin itself</strong>, while the other token is called a <strong>governance token</strong>. </p>
+<p>These two tokens have a symbiotic relationship, where the <u>stablecoin can burned to mint the governance token</u>, and the <u>governance token can be burned to mint the stablecoin</u>. This is the crux of the algorithmic mechanism that maintains the peg.</p>
+<p>We&#39;re gonna use the <a href="https://terra.money/">Terra</a> blockchain as an example, which uses the <strong>LUNA as a stablecoin</strong> and <strong>UST as a governance token</strong> pair to maintain the peg.</p>
+<h3>5.2 Pricing Mechanism</h3>
+<p>Let&#39;s explore how this mint-burn dynamic holds the value of stablecoin. We&#39;ll be using the LUNA/UST pair as an example. </p>
+<p>Remember: UST is the stablecoin that we are trying to peg to 1 USD. LUNA can take on any price as long as UST is at 1 USD.</p>
+<p>So the <strong>mint-burn dynamic</strong> works as follows:</p>
+<blockquote>
+<p>Users can ALWAYS burn one UST to mint $1 worth of LUNA and burn $1 worth of LUNA to mint one UST</p>
+</blockquote>
+<p>We don&#39;t care how much the price of LUNA is. </p>
+<p>If LUNA is at $100, you can redeem it for 100 UST, or redeem $100 UST for 1 LUNA. Conversely, if LUNA is at 0.01 USD, you can redeem 1 UST using 100 LUNA.</p>
+<p>This is the core axiom that holds the peg. Let&#39;s explore how it works through the underpeg and overpeg scenarios.</p>
+<h4>5.2.1 Underpeg</h4>
+<p>Let&#39;s say UST is now trading at 0.95 USD. </p>
+<p>Arbitrageurs can take advantage of the <strong>mint-burn dynamic</strong> to buy UST at 0.95 USD, burn it to mint 1 USD worth of LUNA, and sell it on the free market for a profit of 0.05 USD. </p>
+<p>This exerts <strong>buying pressure</strong> on UST, driving the price up and moving the peg to 1 USD.</p>
+<h4>5.2.2 Overpeg</h4>
+<p>Let&#39;s say UST is now trading at 1.05 USD. </p>
+<p>Arbitrageurs can take advantage of the <strong>mint-burn dynamic</strong> by burning 1 USD worth of LUNA for 1 UST, and selling it on the free market for a profit of 0.05 USD. </p>
+<p>This exerts <strong>selling pressure</strong> on UST, driving the price down and moving the peg back to 1 USD.</p>
+<h3>5.3 Risks</h3>
+<p>If you were following the crypto space in 2022, you might heard of this token called LUNA which crashed from around 120 USD to 0.00003 USD in a matter of days. There were a couple of influencers who were caught up in the crash, with KSI (popular UK influencer) losing 3 million USD.</p>
+<p><img src="/stablecoin/ksi.png" alt="KSI whining on Twitter after losing 3 million"></p>
+<p>Historically, most stablecoins that have collapsed have been algo-backed stablecoins.</p>
+<p><img src="/stablecoin/failed-coins.png" alt="Failed Coins"></p>
+<h4>Death Spiral</h4>
+<p>Why does this happen? Doesn&#39;t the mint-burn dynamic ensure that the peg is maintained?</p>
+<p>Let&#39;s take a look again at the fundamental rule that this stablecoin mechanism relies on:</p>
+<blockquote>
+<p>Users can ALWAYS burn one UST to mint $1 worth of LUNA and burn $1 worth of LUNA to mint one UST</p>
+</blockquote>
+<p>Let&#39;s assume a scenario where UST deviates extremely far from the peg, say it starts selling at 0.5 USD (underpeg) in the free market. Like in the scenario we went through above, arbitrageurs will move in to exploit this price gap and mint more LUNA, exchanging 1 UST (which is worth 0.5 USD) for 1 dollar worth of LUNA. By buying 1 UST for 0.5 USD and getting 1 USD worth of LUNA, arbitrageurs can make a profit of 0.5 USD (per UST). This exerts a <strong>buying pressure on UST</strong>, driving the price up and moving the peg back to 1 USD.</p>
+<p>But problems arise when we look at the price of LUNA. In the above example, arbitrageurs move to mint massive amounts of LUNA to take advantage of the price gap. This floods the market with more LUNA (as I&#39;m selling it for profit), <strong>driving the price of LUNA down</strong>. </p>
+<p>This dip in price of LUNA is where the death spiral begins. For each UST I burn for 1 USD worth of LUNA, I get even more LUNA as the price of LUNA falls. This means that I have to mint even more LUNA to cover the UST supply, which drives the price of LUNA down even further.</p>
+<p>At its lowest LUNA, was worth around 0.00003 USD, which meant that burning 1 UST would get you more than 30,000 LUNA.</p>
+<h4>LUNA as a volatility absorber</h4>
+<p>Through the mint-burn dynamic of UST and LUNA, we can see that LUNA&#39;s price and supply is used to cushion the blow of UST&#39;s price fluctuations.</p>
+<p>LUNA’s price and market cap has to grow with UST’s market cap. If LUNA’s price does not increase sufficiently with UST market cap expansion, then over time UST essentially becomes less ‘backed’ by LUNA. In other words, <strong>if the market cap of UST is higher than the market cap of LUNA, UST is less and less stable</strong>. This is exactly what happened. As seen below, the market cap of UST continued to rise, and from its peak ratio of 635% in November, it fell to 149% in May.</p>
+<p><img src="/stablecoin/UST-LUNA.png" alt="LUNA-UST"></p>
+<h2>6. Stablecoins</h2>
+<p>I think stablecoins, much like the rest of crypto, gets a bad rep for being a shame of sorts. But once you dive into the mechanics of how they work, you&#39;ll find that under the hood there are very concrete rules and mechanisms that hold the peg. </p>
+<p>Fundamentally, the rules and algorithms don&#39;t create value (or money) out of thin air, but they leverage the value of other token and commodities to maintain its pegged value.</p>
+
+</article>
+<hr>
+</body>
+</html>
