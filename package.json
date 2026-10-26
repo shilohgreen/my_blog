@@ -3,5 +3,14 @@
   "private": true,
   "engines": {
     "node": "24.x"
+  },
+  "scripts": {
+    "build:analytics": "esbuild analytics.js --bundle --outfile=analytics.bundle.js --format=iife --minify"
+  },
+  "dependencies": {
+    "@vercel/analytics": "^2.0.1"
+  },
+  "devDependencies": {
+    "esbuild": "^0.28.2"
   }
 }
